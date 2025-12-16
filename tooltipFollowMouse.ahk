@@ -388,11 +388,13 @@ class TooltipFollowerBackend_C069DB6B
     static _lastMonIndex:=0, _currName:="", _currHwnd:=0, tooltipIds:=object()
     init()    {
         static hasCallback:=false
+            ,WM_ACTIVATE:=0x0006
+            ;  ,WM_DPICHANGED:=0x02E0
         if (!hasCallback)    {
             hasCallback:=true
             this.setObjCreateEventHook()
-            onMessage(0x0006,objBindMethod(this,"WM_ACTIVATE"))
-            ;  onMessage(0x02E0,objBindMethod(this,"WM_DPICHANGED"))
+            onMessage(WM_ACTIVATE,objBindMethod(this,"_onActivate"))
+            ;  onMessage(WM_DPICHANGED,objBindMethod(this,"_onDpiChanged"))
         }
     }
     createGui(force:=false)    {
@@ -465,12 +467,12 @@ class TooltipFollowerBackend_C069DB6B
                 }
         }
     }
-    WM_ACTIVATE(wParam, lParam, msg, hWnd)    {
+    _onActivate(wParam, lParam, msg, hWnd)    {
         if (wParam)
             this.createGui(true)
     }
     /*
-    WM_DPICHANGED(wParam, lParam, msg, hWnd)    {
+    _onDpiChanged(wParam, lParam, msg, hWnd)    {
         
     }
     */
